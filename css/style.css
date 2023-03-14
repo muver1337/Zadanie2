@@ -1,5 +1,4 @@
 #app{
-    text-align: center;
     padding: 0 15px 50px;
 }
 body {
@@ -8,4 +7,38 @@ body {
 
 h1 {
     text-align: center;
+}
+
+.create{
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+input {
+    padding: 10px 15px;
+    text-wrap: normal;
+    margin-left: auto;
+    margin-right: auto;
+    width: 20em;
+    border-radius: 10px;
+}
+
+p {
+    text-wrap: normal;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: auto;
+}
+
+button {
+    padding: 10px 15px;
+    border: 1px solid #000000;
+    background-color: #fff;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    cursor: pointer;
+    margin-left: auto;
+    margin-right: auto;
+    width: 23em
 }
