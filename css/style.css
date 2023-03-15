@@ -1,4 +1,5 @@
 #app{
+    text-align: center;
     padding: 0 15px 50px;
 }
 body {
@@ -13,6 +14,13 @@ h1 {
     display: flex;
     flex-direction: column;
     gap: 15px;
+}
+
+.tasks{
+    display: flex;
+    list-style-type: disc;
+    align-items: center;
+    justify-content: center;
 }
 
 input {
@@ -41,4 +49,44 @@ button {
     margin-left: auto;
     margin-right: auto;
     width: 23em
+}
+
+#cols {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.col {
+    width: 30%;
+    text-align: center;
+    background-color: white;
+    border-radius: 30px;
+}
+
+.col-wrapper {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 15px;
+    flex-direction: column;
+}
+
+.cols-wrapper {
+    width: 100%;
+    display: flex;
+    flex-grow: 1;
+    min-height: 680px;
+    justify-content: center;
+    gap: 15px;
+}
+
+.flex-revers {
+    display: flex;
+    flex-direction: column-reverse;
+
+}
+
+.p-title {
+    font-size:large;
 }
