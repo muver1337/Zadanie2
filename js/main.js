@@ -22,8 +22,42 @@ Vue.component('cols', {
                 </ul>
             </div>
         </div>
-    </div>
-</div>
+    <h2 class="error" v-for="error in errors">{{error}}</h2>
+        <div class="cols-wrapper">
+            <div class="col">
+                <ul>
+                    <li class="cards" style="background-color: #e79ba2" v-for="card in column1"><p class="p-title">{{ card.title }}</p>
+                        <ul>
+                            <li class="tasks" v-for="t in card.subtasks" v-if="t.title != null">
+                                <input @click="newStatus1(card, t)"
+                                class="checkbox" type="checkbox"
+                                :disabled="t.completed">
+                                <p :class="{completed: t.completed}">{{t.title}}</p>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    <h2 class="error" v-for="error in errors">{{error}}</h2>
+        <div class="cols-wrapper">
+            <div class="col">
+                <ul>
+                    <li class="cards" style="background-color: #e79ba2" v-for="card in column1"><p class="p-title">{{ card.title }}</p>
+                        <ul>
+                            <li class="tasks" v-for="t in card.subtasks" v-if="t.title != null">
+                                <input @click="newStatus1(card, t)"
+                                class="checkbox" type="checkbox"
+                                :disabled="t.completed">
+                                <p :class="{completed: t.completed}">{{t.title}}</p>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+
 `,
     data() {
         return {
@@ -40,7 +74,7 @@ Vue.component('cols', {
             if (this.column1.length < 3) {
                 this.column1.push(card)
             } else {
-                this.errors.push("You can't add a new card now.")
+                this.errors.push("Нельзя добавить больше 3 записей.")
             }
         })
     },
@@ -65,7 +99,7 @@ Vue.component('cols', {
                 this.column2.push(card)
                 this.column1.splice(this.column1.indexOf(card), 1)
             } else if (this.column2.length === 5) {
-                this.errors.push('You need to complete card in the second column to add new card or complete card in the first column')
+                this.errors.push("Вам нужно заполнить карту во втором столбце, чтобы добавить новую карту или полную карту в первый столбец")
                 if (this.column1.length > 0) {
                     this.column1.forEach(item => {
                         item.subtasks.forEach(item => {
@@ -136,6 +170,8 @@ Vue.component('cols', {
             }
         },
     },
+
+
 })
 
 Vue.component('create', {

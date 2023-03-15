@@ -3,7 +3,7 @@
     padding: 0 15px 50px;
 }
 body {
-    background-image: url(../img/phonk.jpg);
+    background-image: url(../img/phonk3.jpg);
 }
 
 h1 {
@@ -29,13 +29,10 @@ h1 {
 
 .error{
     color: red;
-    font-size:large;
-    border-bottom: 1px solid black;
 }
 
 .cards{
     list-style-type: none;
-    font-size: 14px;
     width: 95%;
     background-color: burlywood;
     border-radius: 30px;
@@ -58,6 +55,8 @@ p {
     margin-left: auto;
     margin-right: auto;
     margin-bottom: auto;
+    cursor: pointer;
+    font-size: 18px;
 }
 
 ul {
@@ -115,5 +114,13 @@ button {
 }
 
 .p-title {
-    font-size:large;
+    font-size:27px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: auto;
+    margin-top:auto;
+}
+
+.P {
+    cursor: pointer
 }
