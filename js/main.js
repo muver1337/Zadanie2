@@ -62,8 +62,7 @@ Vue.component('cols', {
                 this.column1.push(card)
             } else {
                 this.errors.push("Нельзя добавить больше 3 записей.")
-            }
-        })
+            }})
     },
     methods: {
         newStatus1(card, t) {
@@ -86,7 +85,7 @@ Vue.component('cols', {
                 this.column2.push(card)
                 this.column1.splice(this.column1.indexOf(card), 1)
             } else if (this.column2.length === 5) {
-                this.errors.push("Вам нужно заполнить карту во втором столбце, чтобы добавить новую карту или полную карту в первый столбец")
+                this.errors.push("Вам нужно доделать задачу во втором столбце, чтобы продолжить выполнение новой задачи ")
                 if(this.column1.length > 0) {
                     this.column1.forEach(item => {
                         item.subtasks.forEach(item => {
