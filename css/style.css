@@ -3,11 +3,12 @@
     padding: 0 15px 50px;
 }
 body {
-    background-image: url(../img/phonk3.jpg);
+    background-image: url(../img/phonk4.jpg);
 }
 
 h1 {
     text-align: center;
+    color: white;
 }
 
 .create{

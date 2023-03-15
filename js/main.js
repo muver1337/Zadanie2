@@ -9,55 +9,42 @@ Vue.component('cols', {
         <div class="cols-wrapper">
             <div class="col">
                 <ul>
-                    <li class="cards" style="background-color: #e79ba2" v-for="card in column1"><p class="p-title">{{ card.title }}</p>
+                    <li class="cards" style="background-color: #ee666f" v-for="card in column1"><p class="p-title">{{ card.title }}</p>
                         <ul>
-                            <li class="tasks" v-for="t in card.subtasks" v-if="t.title != null">
-                                <input @click="newStatus1(card, t)"
-                                class="checkbox" type="checkbox"
-                                :disabled="t.completed">
+                            <li class="tasks" v-for="t in card.subtasks" @click="newStatus1(card, t)":class="completed" v-if="t.title != null"> 
                                 <p :class="{completed: t.completed}">{{t.title}}</p>
                             </li>
                         </ul>
                     </li>
                 </ul>
             </div>
-        </div>
-    <h2 class="error" v-for="error in errors">{{error}}</h2>
-        <div class="cols-wrapper">
             <div class="col">
                 <ul>
-                    <li class="cards" style="background-color: #e79ba2" v-for="card in column1"><p class="p-title">{{ card.title }}</p>
+                    <li class="cards" style="background-color: #f3ef54" v-for="card in column2"><p class="p-title">{{ card.title }}</p>
                         <ul>
-                            <li class="tasks" v-for="t in card.subtasks" v-if="t.title != null">
-                                <input @click="newStatus1(card, t)"
-                                class="checkbox" type="checkbox"
-                                :disabled="t.completed">
+                            <li class="tasks" v-for="t in card.subtasks" @click="newStatus2(card, t)":class="completed" v-if="t.title != null"> 
                                 <p :class="{completed: t.completed}">{{t.title}}</p>
                             </li>
                         </ul>
                     </li>
                 </ul>
             </div>
-        </div>
-    <h2 class="error" v-for="error in errors">{{error}}</h2>
-        <div class="cols-wrapper">
             <div class="col">
                 <ul>
-                    <li class="cards" style="background-color: #e79ba2" v-for="card in column1"><p class="p-title">{{ card.title }}</p>
+                    <li class="cards" style="background-color: #56fa56" v-for="card in column3"><p class="p-title">{{ card.title }}</p><div class="flex-revers"><p>{{ card.date }}</p>
                         <ul>
-                            <li class="tasks" v-for="t in card.subtasks" v-if="t.title != null">
-                                <input @click="newStatus1(card, t)"
-                                class="checkbox" type="checkbox"
-                                :disabled="t.completed">
+                            <li class="tasks" v-for="t in card.subtasks" @click="TaskCompleted(card, task)":class="completed" v-if="t.title != null">
                                 <p :class="{completed: t.completed}">{{t.title}}</p>
                             </li>
                         </ul>
-                    </li>
-                </ul>
-            </div>
+                    </div>
+                </li>
+            </ul>
         </div>
-
-
+    </div>
+</div>
+</div>
+        
 `,
     data() {
         return {
@@ -71,7 +58,7 @@ Vue.component('cols', {
     mounted() {
         eventBus.$on('card-submitted', card => {
             this.errors = []
-            if (this.column1.length < 3) {
+            if (this.column1.length < 3){
                 this.column1.push(card)
             } else {
                 this.errors.push("Нельзя добавить больше 3 записей.")
@@ -95,12 +82,12 @@ Vue.component('cols', {
                     card.status++
                 }
             }
-            if (card.status / count * 100 >= 50 && card.status / count * 100 < 100 && this.column2.length < 5) {
+            if (card.status/count*100 >= 50 && card.status/count*100 < 100 && this.column2.length < 5) {
                 this.column2.push(card)
                 this.column1.splice(this.column1.indexOf(card), 1)
             } else if (this.column2.length === 5) {
                 this.errors.push("Вам нужно заполнить карту во втором столбце, чтобы добавить новую карту или полную карту в первый столбец")
-                if (this.column1.length > 0) {
+                if(this.column1.length > 0) {
                     this.column1.forEach(item => {
                         item.subtasks.forEach(item => {
                             item.completed = true;
@@ -124,13 +111,13 @@ Vue.component('cols', {
                     card.status++
                 }
             }
-            if (card.status / count * 100 === 100) {
+            if (card.status/count*100 === 100) {
                 this.column3.push(card)
                 this.column2.splice(this.column2.indexOf(card), 1)
                 card.date = new Date()
             }
-            if (this.column2.length < 5) {
-                if (this.column1.length > 0) {
+            if(this.column2.length < 5) {
+                if(this.column1.length > 0) {
                     this.column1.forEach(item => {
                         item.subtasks.forEach(item => {
                             item.completed = false;
@@ -141,7 +128,9 @@ Vue.component('cols', {
         }
     },
 
-    computed: {},
+    computed: {
+
+    },
     props: {
         card: {
             title: {
