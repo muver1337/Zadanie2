@@ -56,15 +56,29 @@ Vue.component('cols', {
     },
 
     mounted() {
+        this.column1 = JSON.parse(localStorage.getItem('column1')) || [];
+        this.column2 = JSON.parse(localStorage.getItem('column2')) || [];
+        this.column3 = JSON.parse(localStorage.getItem('column3')) || [];
         eventBus.$on('card-submitted', card => {
             this.errors = []
-            if (this.column1.length < 3){
+            if (this.column1.length < 3) {
                 this.column1.push(card)
+                this.saveColumn1();
             } else {
                 this.errors.push("Нельзя добавить больше 3 записей.")
-            }})
+            }
+        })
     },
     methods: {
+        saveColumn1() {
+            localStorage.setItem('column1', JSON.stringify(this.column1));
+        },
+        saveColumn2() {
+            localStorage.setItem('column2', JSON.stringify(this.column2));
+        },
+        saveColumn3() {
+            localStorage.setItem('column3', JSON.stringify(this.column3));
+        },
         newStatus1(card, t) {
             t.completed = true
             let count = 0
@@ -81,12 +95,14 @@ Vue.component('cols', {
                     card.status++
                 }
             }
-            if (card.status/count*100 >= 50 && card.status/count*100 < 100 && this.column2.length < 5) {
+            if (card.status / count * 100 >= 50 && card.status / count * 100 < 100 && this.column2.length < 5) {
                 this.column2.push(card)
                 this.column1.splice(this.column1.indexOf(card), 1)
+                this.saveColumn1();
+                this.saveColumn2();
             } else if (this.column2.length === 5) {
                 this.errors.push("Вам нужно доделать задачу во втором столбце, чтобы продолжить выполнение новой задачи ")
-                if(this.column1.length > 0) {
+                if (this.column1.length > 0) {
                     this.column1.forEach(item => {
                         item.subtasks.forEach(item => {
                             item.completed = true;
@@ -110,13 +126,15 @@ Vue.component('cols', {
                     card.status++
                 }
             }
-            if (card.status/count*100 === 100) {
+            if (card.status / count * 100 === 100) {
                 this.column3.push(card)
                 this.column2.splice(this.column2.indexOf(card), 1)
-                card.date = new Date()
+                card.date = new Date().toLocaleString()
+                this.saveColumn2();
+                this.saveColumn3();
             }
-            if(this.column2.length < 5) {
-                if(this.column1.length > 0) {
+            if (this.column2.length < 5) {
+                if (this.column1.length > 0) {
                     this.column1.forEach(item => {
                         item.subtasks.forEach(item => {
                             item.completed = false;
@@ -127,9 +145,7 @@ Vue.component('cols', {
         }
     },
 
-    computed: {
-
-    },
+    computed: {},
     props: {
         card: {
             title: {
