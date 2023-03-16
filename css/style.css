@@ -131,3 +131,15 @@ button {
     margin-right: auto;
     width: 23em
 }
+
+.col1{
+
+}
+
+.disable {
+    pointer-events: none;
+    width: 30%;
+    text-align: center;
+    background-color: white;
+    border-radius: 30px;
+}

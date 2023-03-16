@@ -7,12 +7,23 @@ Vue.component('cols', {
     <h2 class="error" v-for="error in errors">{{error}}</h2>
         <create></create>
         <div class="cols-wrapper">
-            <div class="col">
+            <div class="col" v-if="column2.length !== 5">
                 <ul>
                     <li class="cards" style="background-color: #ee666f" v-for="card in column1"><p class="p-title">{{ card.title }}</p>
                         <ul>
-                            <li class="tasks" v-for="t in card.subtasks" @click="newStatus1(card, t)":class="completed" v-if="t.title != null"> 
-                                <p :class="{completed: t.completed}">{{t.title}}</p>
+                            <li class="tasks" v-for="t, index in card.subtasks" @click="newStatus1(card, t, index)" v-if="t.title != null"> 
+                                <p :class="{completed: t.completed}" >{{t.title}}</p>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div  v-if="column2.length === 5" class="disable">
+                <ul>
+                    <li class="cards" style="background-color: #ee666f" v-for="card in column1"><p class="p-title">{{ card.title }}</p>
+                        <ul>
+                            <li class="tasks" v-for="t, index in card.subtasks" @click="newStatus1(card, t, index)" v-if="t.title != null"> 
+                                <p :class="{completed: t.completed}" >{{t.title}}</p>
                             </li>
                         </ul>
                     </li>
@@ -22,7 +33,7 @@ Vue.component('cols', {
                 <ul>
                     <li class="cards" style="background-color: #f3ef54" v-for="card in column2"><p class="p-title">{{ card.title }}</p>
                         <ul>
-                            <li class="tasks" v-for="t in card.subtasks" @click="newStatus2(card, t)":class="completed" v-if="t.title != null"> 
+                            <li class="tasks" v-for="t in card.subtasks" @click="newStatus2(card, t)" v-if="t.title != null"> 
                                 <p :class="{completed: t.completed}">{{t.title}}</p>
                             </li>
                         </ul>
@@ -33,7 +44,7 @@ Vue.component('cols', {
                 <ul>
                     <li class="cards" style="background-color: #56fa56" v-for="card in column3"><p class="p-title">{{ card.title }}</p><div class="flex-revers"><p>{{ card.date }}</p>
                         <ul>
-                            <li class="tasks" v-for="t in card.subtasks" @click="TaskCompleted(card, task)":class="completed" v-if="t.title != null">
+                            <li class="tasks" v-for="t in card.subtasks" @click="TaskCompleted(card, task)"  v-if="t.title != null">
                                 <p :class="{completed: t.completed}">{{t.title}}</p>
                             </li>
                         </ul>
@@ -49,6 +60,7 @@ Vue.component('cols', {
     data() {
         return {
             column1: [],
+            isDisabled: true,
             column2: [],
             column3: [],
             errors: [],
@@ -79,7 +91,12 @@ Vue.component('cols', {
         saveColumn3() {
             localStorage.setItem('column3', JSON.stringify(this.column3));
         },
-        newStatus1(card, t) {
+        newMetod() {
+            if (this.column2.length === 7 ) {
+                this.isDisabled = false;
+            }
+        },
+        newStatus1(card, t, index) {
             t.completed = true
             let count = 0
             card.status = 0
@@ -95,6 +112,7 @@ Vue.component('cols', {
                     card.status++
                 }
             }
+
             if (card.status / count * 100 >= 50 && card.status / count * 100 < 100 && this.column2.length < 5) {
                 this.column2.push(card)
                 this.column1.splice(this.column1.indexOf(card), 1)
@@ -180,7 +198,6 @@ Vue.component('cols', {
 
 Vue.component('create', {
     template: `
-    <section>
         <form class="create" @submit.prevent="onSubmit">
             <p>
                 <input id="title" required v-model="title" type="text" placeholder="Заголовок">
@@ -192,7 +209,6 @@ Vue.component('create', {
             <input  id="subtask5" v-model="subtask5" maxlength="25" placeholder="Задача 5">
             <button type="submit">Добавить задачу</button>
         </form>
-    </section>
     `,
     data() {
         return {
@@ -232,6 +248,6 @@ Vue.component('create', {
 let app = new Vue({
     el: '#app',
     data: {
-        name: 'Добавление записи'
+        name: 'Добавление задачи'
     }
 })
