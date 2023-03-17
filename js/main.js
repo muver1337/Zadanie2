@@ -7,22 +7,11 @@ Vue.component('cols', {
     <h2 class="error" v-for="error in errors">{{error}}</h2>
         <create></create>
         <div class="cols-wrapper">
-            <div class="col" v-if="column2.length !== 5">
+            <div class="col">
                 <ul>
                     <li class="cards" style="background-color: #ee666f" v-for="card in column1"><p class="p-title">{{ card.title }}</p>
                         <ul>
-                            <li class="tasks" v-for="t, index in card.subtasks" @click="newStatus1(card, t, index)" v-if="t.title != null"> 
-                                <p :class="{completed: t.completed}" >{{t.title}}</p>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-            <div  v-if="column2.length === 5" class="disable">
-                <ul>
-                    <li class="cards" style="background-color: #ee666f" v-for="card in column1"><p class="p-title">{{ card.title }}</p>
-                        <ul>
-                            <li class="tasks" v-for="t, index in card.subtasks" @click="newStatus1(card, t, index)" v-if="t.title != null"> 
+                            <li class="tasks" v-for="t, index in card.subtasks" @click="clickToCard1(card, t, index)" v-if="t.title != null"> 
                                 <p :class="{completed: t.completed}" >{{t.title}}</p>
                             </li>
                         </ul>
@@ -60,7 +49,8 @@ Vue.component('cols', {
     data() {
         return {
             column1: [],
-            isDisabled: true,
+            isBlocked: false,
+            bufferCard: null,
             column2: [],
             column3: [],
             errors: [],
@@ -91,12 +81,7 @@ Vue.component('cols', {
         saveColumn3() {
             localStorage.setItem('column3', JSON.stringify(this.column3));
         },
-        newMetod() {
-            if (this.column2.length === 7 ) {
-                this.isDisabled = false;
-            }
-        },
-        newStatus1(card, t, index) {
+        newStatus1(card, t) {
             t.completed = true
             let count = 0
             card.status = 0
@@ -113,20 +98,13 @@ Vue.component('cols', {
                 }
             }
 
-            if (card.status / count * 100 >= 50 && card.status / count * 100 < 100 && this.column2.length < 5) {
+            if (this.amountPercentCard(card.status, card.subtasks) === 2 && this.column2.length < 5 && !this.isBlocked) {
                 this.column2.push(card)
                 this.column1.splice(this.column1.indexOf(card), 1)
                 this.saveColumn1();
                 this.saveColumn2();
-            } else if (this.column2.length === 5) {
-                this.errors.push("Вам нужно доделать задачу во втором столбце, чтобы продолжить выполнение новой задачи ")
-                if (this.column1.length > 0) {
-                    this.column1.forEach(item => {
-                        item.subtasks.forEach(item => {
-                            item.completed = true;
-                        })
-                    })
-                }
+            } else if (this.column2.length === 5 && this.amountPercentCard(card.status, card.subtasks) === 2) {
+                return 'block';
             }
         },
         newStatus2(card, t) {
@@ -151,49 +129,46 @@ Vue.component('cols', {
                 this.saveColumn2();
                 this.saveColumn3();
             }
-            if (this.column2.length < 5) {
-                if (this.column1.length > 0) {
-                    this.column1.forEach(item => {
-                        item.subtasks.forEach(item => {
-                            item.completed = false;
-                        })
-                    })
+            if (card.status / count * 100 === 100) {
+                this.column3.push(card)
+                this.column2.splice(this.column2.indexOf(card), 1)
+                card.date = new Date().toLocaleString()
+                this.saveColumn2();
+                this.saveColumn3();
+                if(this.isBlocked) {
+                    let bufferCard = this.column1.splice(this.bufferCard, 1);
+                    this.column2.push(bufferCard[0]);
+                    this.isBlocked = false;
+                    this.errors = [];
+                    this.saveColumn2();
+                    this.saveColumn1();
                 }
             }
-        }
-    },
+        },
 
-    computed: {},
-    props: {
-        card: {
-            title: {
-                type: Text,
-                required: true
-            },
-            subtasks: {
-                type: Array,
-                required: true,
-                completed: {
-                    type: Boolean,
-                    required: true
+        clickToCard1(card, t, index) {
+            if(!this.isBlocked) {
+                let res = this.newStatus1(card, t);
+                if(res) {
+                    this.isBlocked = true;
+                    this.errors.push('Второй столбец переполнен');
+                    this.bufferCard = index;
+                    console.log(this.bufferCard);
+                    this.saveColumn1();
                 }
-            },
-            date: {
-                type: Date,
-                required: false
-            },
-            status: {
-                type: Number,
-                required: true
-            },
-            errors: {
-                type: Array,
-                required: false
+                else this.isBlocked = false;
             }
+        },
+
+        amountPercentCard(completedAmount, tasks) {
+            let amountTasks = tasks.filter(t => {return t.title});
+            if(completedAmount / amountTasks.length >= 0.5) return 2;
+            else if(completedAmount / amountTasks.length === 1) return 3;
+            else if(completedAmount / amountTasks.length < 0.5) return 1;
         },
     },
 
-
+    computed: {},
 })
 
 Vue.component('create', {
