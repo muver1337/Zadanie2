@@ -122,6 +122,7 @@ Vue.component('cols', {
                     card.status++
                 }
             }
+
             if (card.status / count * 100 === 100) {
                 this.column3.push(card)
                 this.column2.splice(this.column2.indexOf(card), 1)
@@ -129,20 +130,13 @@ Vue.component('cols', {
                 this.saveColumn2();
                 this.saveColumn3();
             }
-            if (card.status / count * 100 === 100) {
-                this.column3.push(card)
-                this.column2.splice(this.column2.indexOf(card), 1)
-                card.date = new Date().toLocaleString()
+            if(this.isBlocked) {
+                let bufferCard = this.column1.splice(this.bufferCard, 1);
+                this.column2.push(bufferCard[0]);
+                this.isBlocked = false;
+                this.errors = [];
                 this.saveColumn2();
-                this.saveColumn3();
-                if(this.isBlocked) {
-                    let bufferCard = this.column1.splice(this.bufferCard, 1);
-                    this.column2.push(bufferCard[0]);
-                    this.isBlocked = false;
-                    this.errors = [];
-                    this.saveColumn2();
-                    this.saveColumn1();
-                }
+                this.saveColumn1();
             }
         },
 
@@ -167,7 +161,6 @@ Vue.component('cols', {
             else if(completedAmount / amountTasks.length < 0.5) return 1;
         },
     },
-
     computed: {},
 })
 
